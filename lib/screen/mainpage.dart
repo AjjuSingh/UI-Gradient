@@ -32,6 +32,9 @@ class _MainState extends State<Main> with AutomaticKeepAliveClientMixin<Main> {
   double greenSecond = 55;
   double blueSecond = 255;
 
+  // Dimensions of color selector widget
+  Size selectionSize = Size(30, 30);
+
   // Add new gradient to database
   void addGradient(GradientCard gradient) async {
     var box = await Hive.openBox('gradient');
@@ -161,10 +164,15 @@ class _MainState extends State<Main> with AutomaticKeepAliveClientMixin<Main> {
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    double widthSpacing = MediaQuery.of(context).size.width * 0.05;
     return Scaffold(
       appBar: CupertinoNavigationBar(
         middle: new Text("UI Gradient", style: TextStyle(color: Colors.white)),
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: Color(0xff434343),
+        trailing: Icon(
+          Icons.camera_alt_rounded,
+          color: Colors.white,
+        ),
       ),
       body: Stack(
         children: <Widget>[
@@ -173,7 +181,7 @@ class _MainState extends State<Main> with AutomaticKeepAliveClientMixin<Main> {
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
                 gradient: LinearGradient(
-                    colors: [Color(0xFF9b37ff), Color(0xFF6419ff)],
+                    colors: [Color(0xFF434343), Color(0xFF000000)],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight)),
           ),
@@ -182,10 +190,12 @@ class _MainState extends State<Main> with AutomaticKeepAliveClientMixin<Main> {
             //mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.all(40.0),
+                padding: const EdgeInsets.all(20.0),
                 child: Row(
                   children: <Widget>[
                     Container(
+                      height: selectionSize.height,
+                      width: selectionSize.width,
                       child: InkWell(
                         onTap: () {
                           setState(() {
@@ -193,17 +203,20 @@ class _MainState extends State<Main> with AutomaticKeepAliveClientMixin<Main> {
                             secondPicker = false;
                           });
                         },
-                        child: new CircleAvatar(
-                          minRadius: 20,
-                          maxRadius: 30,
-                          backgroundColor: Color.fromRGBO(redFirst.toInt(), greenFirst.toInt(), blueFirst.toInt(), 1),
-                        ),
                       ),
                       decoration: BoxDecoration(
-                          boxShadow: [BoxShadow(color: Color.fromRGBO(0, 0, 0, 0.3), spreadRadius: 2, blurRadius: 25)]),
+                          shape: BoxShape.circle,
+                          color: Color.fromARGB(255, redFirst.toInt(), greenFirst.toInt(), blueFirst.toInt()),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color.fromRGBO(0, 0, 0, 0.3),
+                              spreadRadius: 2,
+                              blurRadius: 25,
+                            )
+                          ]),
                     ),
                     new SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.1,
+                      width: widthSpacing,
                     ),
                     new Text(
                       "#" +
@@ -217,11 +230,11 @@ class _MainState extends State<Main> with AutomaticKeepAliveClientMixin<Main> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
                 child: Column(
                   children: <Widget>[
                     new Container(
-                      height: 200,
+                      height: 100,
                       decoration: BoxDecoration(
                           gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [
                             Color.fromRGBO(redFirst.toInt(), greenFirst.toInt(), blueFirst.toInt(), 1),
@@ -239,53 +252,38 @@ class _MainState extends State<Main> with AutomaticKeepAliveClientMixin<Main> {
                     new SizedBox(
                       height: 10,
                     ),
-                    InkWell(
-                      onTap: () {
-                        GradientCard gradient =
-                            new GradientCard([redFirst, greenFirst, blueFirst], [redSecond, greenSecond, blueSecond]);
-                        addGradient(gradient);
-                        AwesomeDialog(
-                          context: context,
-                          animType: AnimType.SCALE,
-                          dialogType: DialogType.SUCCES,
-                          body: Center(
-                            child: Text(
-                              'Added to favorites 😍',
-                              style: TextStyle(fontStyle: FontStyle.italic),
+                    new RaisedButton(
+                        animationDuration: Duration(milliseconds: 500),
+                        color: Colors.blueAccent,
+                        splashColor: Colors.black,
+                        onPressed: () {
+                          GradientCard gradient =
+                              new GradientCard([redFirst, greenFirst, blueFirst], [redSecond, greenSecond, blueSecond]);
+                          addGradient(gradient);
+                          AwesomeDialog(
+                            context: context,
+                            animType: AnimType.SCALE,
+                            dialogType: DialogType.SUCCES,
+                            body: Center(
+                              child: Text(
+                                'Added to favorites 😍',
+                                style: TextStyle(fontStyle: FontStyle.italic),
+                              ),
                             ),
-                          ),
-                          btnOkOnPress: () {},
-                        ).show();
-                      },
-                      splashColor: Colors.orange,
-                      child: new Container(
-                        height: 50,
-                        width: 100,
+                            btnOkOnPress: () {},
+                          ).show();
+                        },
                         child: Center(
-                            child: new Text(
-                          "SAVE",
-                          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                          child: new Text(
+                            "SAVE",
+                            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                          ),
                         )),
-                        decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [Color(0xFF9b37ff), Color(0xFF6419ff)]),
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Colors.black.withOpacity(0.3),
-                                  spreadRadius: 0.1,
-                                  blurRadius: 30,
-                                  offset: Offset(5, 10))
-                            ],
-                            borderRadius: BorderRadius.all(Radius.circular(20))),
-                      ),
-                    ),
                   ],
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(40.0),
+                padding: const EdgeInsets.all(20.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
@@ -299,9 +297,11 @@ class _MainState extends State<Main> with AutomaticKeepAliveClientMixin<Main> {
                       style: widget.buttonText,
                     ),
                     new SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.1,
+                      width: widthSpacing,
                     ),
                     Container(
+                      height: selectionSize.height,
+                      width: selectionSize.width,
                       child: InkWell(
                         onTap: () {
                           setState(() {
@@ -309,15 +309,17 @@ class _MainState extends State<Main> with AutomaticKeepAliveClientMixin<Main> {
                             firstPicker = false;
                           });
                         },
-                        child: new CircleAvatar(
-                          minRadius: 20,
-                          maxRadius: 30,
-                          backgroundColor:
-                              Color.fromRGBO(redSecond.toInt(), greenSecond.toInt(), blueSecond.toInt(), 1),
-                        ),
                       ),
                       decoration: BoxDecoration(
-                          boxShadow: [BoxShadow(color: Color.fromRGBO(0, 0, 0, 0.3), spreadRadius: 4, blurRadius: 25)]),
+                          shape: BoxShape.circle,
+                          color: Color.fromARGB(255, redSecond.toInt(), greenSecond.toInt(), blueSecond.toInt()),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color.fromRGBO(0, 0, 0, 0.3),
+                              spreadRadius: 2,
+                              blurRadius: 25,
+                            )
+                          ]),
                     ),
                   ],
                 ),

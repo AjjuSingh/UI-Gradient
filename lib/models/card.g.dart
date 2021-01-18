@@ -28,4 +28,8 @@ class GradientCardAdapter extends TypeAdapter<GradientCard> {
       ..writeByte(1)
       ..write(obj.secondaryColor);
   }
+
+  @override
+  // TODO: implement typeId
+  int get typeId => throw UnimplementedError();
 }

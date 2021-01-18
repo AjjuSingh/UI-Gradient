@@ -13,14 +13,13 @@ void main() async {
   ));
 
   // Get the application location on device
+  WidgetsFlutterBinding.ensureInitialized();
   final appDocumentDirectory = await path_provider.getApplicationDocumentsDirectory();
 
   // Initializing the Hive and then open the box which return Future
   Hive.init(appDocumentDirectory.path);
 
-  WidgetsFlutterBinding.ensureInitialized();
-
-  Hive.registerAdapter(GradientCardAdapter(), 0);
+  Hive.registerAdapter(GradientCardAdapter());
 }
 
 class App extends StatefulWidget {
@@ -30,7 +29,7 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> with TickerProviderStateMixin {
   TextStyle buttonText = TextStyle(fontSize: 20, fontFamily: 'Arvo', color: Colors.white);
-  PageController pageController = new PageController(initialPage: 0, keepPage: false, viewportFraction: 1);
+  PageController pageController = new PageController(initialPage: 0, keepPage: false, viewportFraction: 0.8);
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +38,6 @@ class _AppState extends State<App> with TickerProviderStateMixin {
       body: TabBarView(
         //controller: pageController,
         controller: TabController(initialIndex: 0, length: 2, vsync: this),
-
         children: [
           new Main(buttonText: buttonText),
           FutureBuilder(

@@ -28,10 +28,10 @@ dependencies:
   flutter_fluid_slider: ^1.0.2
   hive:
   hive_flutter:
+  http:
   path_provider:
   giffy_dialog:
   awesome_dialog: ^0.0.5
-
 
 module:
   androidX: true 
@@ -41,6 +41,7 @@ dev_dependencies:
     sdk: flutter
   hive_generator:
   build_runner:
+  mockito: any
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
